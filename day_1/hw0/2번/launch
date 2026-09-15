@@ -1,0 +1,22 @@
+mkdir -p ~/ros2_ws/src/my_cpp_pkg/launch
+
+cat << 'EOF' > ~/ros2_ws/src/my_cpp_pkg/launch/my_launch.py
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        # Publisher 노드 실행
+        Node(
+            package='my_cpp_pkg',
+            executable='my_publisher',
+            name='publisher_node'
+        ),
+        # Subscriber 노드 실행
+        Node(
+            package='my_cpp_pkg',
+            executable='my_subscriber',
+            name='subscriber_node'
+        ),
+    ])
+EOF
