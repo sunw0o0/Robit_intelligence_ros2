@@ -31,10 +31,18 @@ ament_target_dependencies(imu_watchdog
   sensor_msgs
 )
 
+add_executable(imu_watchdog_wall src/imu_watchdog_wall.cpp)
+ament_target_dependencies(imu_watchdog_wall
+  rclcpp
+  rclcpp_lifecycle
+  sensor_msgs
+)
+
 install(TARGETS
   time_node
   fake_imu
   imu_watchdog
+  imu_watchdog_wall
   DESTINATION lib/${PROJECT_NAME}
 )
 
