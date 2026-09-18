@@ -1,0 +1,80 @@
+# controller_manager: 이 워크스페이스에서 관리할 컨트롤러 목록과 타입을 선언.
+# 여기 나열된 이름(arm_controller 등)은 우리가 임의로 지은 "컨트롤러 인스턴스 이름"이고,
+# type은 지난 슬라이드에서 본 "표준 컨트롤러" 중 어떤 걸 쓸지 지정하는 것.
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # read() -> update() -> write() 제어 루프가 초당 100번 돎
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    camera_tower_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    base_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    flipper_controller:
+      type: forward_command_controller/ForwardCommandController
+
+
+# ── 팔 컨트롤러: arm_joint1~4, arm_joint6(eclipse_arm)과
+#    arm_joint5(eclipse_arm2)를 "하나의 컨트롤러"로 묶어서 궤적 명령 ──
+# 컨트롤러는 하드웨어가 뭔지 몰라도 되고 인터페이스 이름만 본다고 배웠던 것처럼,
+# arm_joint5가 다른 하드웨어 컴포넌트(eclipse_arm2) 소속이어도 상관없이
+# 이름만 맞으면 같은 컨트롤러에 묶을 수 있음.
+arm_controller:
+  ros__parameters:
+    joints:
+      - arm_joint1
+      - arm_joint2
+      - arm_joint3
+      - arm_joint4
+      - arm_joint5
+      - arm_joint6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+
+# ── 카메라 타워 컨트롤러: 관절 4개를 그대로 전달(forward) ──
+camera_tower_controller:
+  ros__parameters:
+    joints:
+      - ct_joint1_1
+      - ct_joint2_1
+      - ct_joint1_2
+      - ct_joint2_2
+    interface_name: position
+    # 입력: ~/camera_tower_controller/commands (Float64MultiArray)
+    # 배열 순서는 위 joints 순서와 반드시 일치해야 함
+
+
+# ── 베이스 바퀴 컨트롤러: 좌우 바퀴 2개로 차동 구동 ──
+base_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+    wheel_separation: 0.24     # 좌우 바퀴 간 거리 (0.12 + 0.12)
+    wheel_radius: 0.08         # 바퀴 반지름
+    use_stamped_vel: true      # Jazzy에서는 TwistStamped를 받아야 함 (지난 시간에 배운 그 함정!)
+    publish_rate: 50.0
+    base_frame_id: base_link
+    odom_frame_id: odom
+
+
+# ── 플리퍼 컨트롤러: fl/fr/bl/br 관절 4개를 그대로 전달 ──
+flipper_controller:
+  ros__parameters:
+    joints:
+      - fl_joint
+      - fr_joint
+      - bl_joint
+      - br_joint
+    interface_name: position
+    # 입력: ~/flipper_controller/commands (Float64MultiArray, 순서: fl, fr, bl, br)

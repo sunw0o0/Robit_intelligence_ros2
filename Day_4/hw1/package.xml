@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+<name>ros_day3</name>
+<version>0.0.0</version>
+<description>TODO: Package description</description>
+<maintainer email="sunwoo3908@naver.com">sunwoo</maintainer>
+<license>TODO: License declaration</license>
+
+<buildtool_depend>ament_cmake</buildtool_depend>
+
+<depend>rclcpp</depend>
+<depend>rclcpp_lifecycle</depend>
+<depend>std_msgs</depend>
+<depend>sensor_msgs</depend>
+<!-- [추가] 이 패키지가 lifecycle_msgs(get_state 서비스 타입 등)를 사용한다고 선언
+     CMakeLists.txt의 find_package(lifecycle_msgs REQUIRED)와 반드시 짝을 맞춰야 함 -->
+<depend>lifecycle_msgs</depend>
+<exec_depend>launch</exec_depend>
+<exec_depend>launch_ros</exec_depend>
+
+<test_depend>ament_lint_auto</test_depend>
+<test_depend>ament_lint_common</test_depend>
+
+<export>
+<build_type>ament_cmake</build_type>
+</export>
+</package>
